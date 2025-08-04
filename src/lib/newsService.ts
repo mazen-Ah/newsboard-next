@@ -124,35 +124,61 @@ if(query === "latest") { allArticles.sort((a, b) =>
   };
 };
 
-export const getArticle = async (id: string) => {
-  const [articleId] = id.split('?');
-  const decodedId = decodeURIComponent(articleId);
-  if (decodedId.includes('theguardian.com')) {
-    try {
-      const urlPath = decodedId.split('theguardian.com/')[1];
-      const response = await guardianApiClient.get(`/${urlPath}`, {
-        params: {
-          'show-fields': 'all'
-        }
-      });
-      const article = response.data?.response?.content;
-      return article ? transformNews(article, 'guardian') : null;
-    } catch (error) {
-      console.error('Error fetching Guardian article:', error);
-      return error;
-    }
+const getGuardianArticleById = async (id: string): Promise<Article | null> => {
+  try {
+    const urlPath = id.split('theguardian.com/')[1];
+    const response = await guardianApiClient.get(`/${urlPath}`, {
+      params: {
+        'show-fields': 'all'
+      }
+    });
+    
+    const article = response.data?.response?.content;
+    return article ? transformNews(article, 'guardian') : null;
+  } catch (error) {
+    console.error('Error fetching Guardian article:', error);
+    throw new Error(`Failed to fetch Guardian article: ${error}`);
   }
-  const title = decodedId;
+};
+
+const getNewsApiArticleByTitle = async (title: string): Promise<Article | null> => {
   try {
     const { articles } = await getAllArticles(title, 1, 10);
     return articles.find(article => 
       article.source === 'NewsAPI' && 
       article.title.replaceAll(':', '') === title
-    );
+    ) || null;
   } catch (error) {
     console.error('Error fetching NewsAPI article:', error);
-    return error;
+    throw new Error(`Failed to fetch NewsAPI article: ${error}`);
   }
+};
+
+export const getArticle = async (id: string): Promise<Article | null> => {
+  try {
+    const [articleId] = id.split('?');
+    const decodedId = decodeURIComponent(articleId);
+    
+    if (id.includes('theguardian.com')) {
+      return await getGuardianArticleById(decodedId);
+    } else {
+      return await getNewsApiArticleByTitle(decodedId);
+    }
+  } catch (error) {
+    console.error('Error in getArticle:', error);
+    return null;
+  }
+};
+
+export const getArticleFromGuardian = async (url: string): Promise<Article | null> => {
+  if (!url.includes('theguardian.com')) {
+    throw new Error('Invalid Guardian URL provided');
+  }
+  return await getGuardianArticleById(url);
+};
+
+export const getArticleFromNewsApi = async (title: string): Promise<Article | null> => {
+  return await getNewsApiArticleByTitle(title);
 };
 
 

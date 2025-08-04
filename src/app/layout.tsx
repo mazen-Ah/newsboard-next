@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "news-app",
-  description: "news-app",
+  title: "NewsFlow - Latest News Articles",
+  description:
+    "Stay updated with the latest news from around the world. Get breaking news, world news, and trending stories.",
+  keywords:
+    "news, articles, breaking news, world news, latest news, trending stories",
 };
 
 export default function RootLayout({

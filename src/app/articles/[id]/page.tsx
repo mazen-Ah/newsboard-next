@@ -3,6 +3,7 @@ import { Article } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { JSX } from "react";
 
 export async function generateMetadata({
@@ -37,7 +38,9 @@ export default async function ArticlePage({
 }: PageProps): Promise<JSX.Element> {
   const { id } = await params;
   const article = (await getArticle(id)) as any;
-
+  if (!article) {
+    return notFound();
+  }
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
