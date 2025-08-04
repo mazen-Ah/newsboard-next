@@ -57,9 +57,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NEXT_PUBLIC_BASE_URL` | Base URL of your application | Yes |
-| `NEXT_PUBLIC_NEWSAPI_KEY` | API key from NewsAPI | Yes |
-| `NEXT_PUBLIC_GUARDIAN_API_KEY` | API key from The Guardian API | Yes |
+| `NEXT_PUBLIC_NEWSAPI_KEY` | 407126cc0152479cb6a3c875f402f789
+| `NEXT_PUBLIC_GUARDIAN_API_KEY` | 407126cc0152479cb6a3c875f402f789
 
 ## API Integration
 
