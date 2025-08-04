@@ -2,6 +2,7 @@ import type { Article } from "@/types";
 import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 
 type Props = {
   article: Article;
@@ -58,4 +59,4 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
   );
 };
 
-export default ArticleCard;
+export default memo(ArticleCard);

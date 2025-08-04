@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, memo } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useNews } from "@/hooks/useNews";
 import SearchBar from "@/components/SearchBar";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -15,13 +16,40 @@ interface HomePageProps {
 }
 
 function HomePage({}: HomePageProps) {
-  const [search, setSearch] = useState("latest");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(() => {
+    return searchParams.get("q") || "latest";
+  });
+
   const debouncedSearch = useDebounce(search);
   const { articles, loading, error, hasMore, loadMore } =
     useNews(debouncedSearch);
   const scrollTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const handleScroll = useCallback(() => {
+  // Update search state when URL parameters change (e.g., when navigating back)
+  useEffect(() => {
+    const urlQuery = searchParams.get("q") || "latest";
+    if (urlQuery !== search) {
+      setSearch(urlQuery);
+    }
+  }, [searchParams]);
+
+  // Update URL when search changes (but only if it's different from URL)
+  useEffect(() => {
+    const currentUrlQuery = searchParams.get("q") || "latest";
+    if (debouncedSearch !== currentUrlQuery) {
+      const params = new URLSearchParams(searchParams);
+      if (debouncedSearch && debouncedSearch !== "latest") {
+        params.set("q", debouncedSearch);
+      } else {
+        params.delete("q");
+      }
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [debouncedSearch, router, searchParams]);
+
+  const handleScroll = () => {
     if (scrollTimeout.current) {
       clearTimeout(scrollTimeout.current);
     }
@@ -32,7 +60,7 @@ function HomePage({}: HomePageProps) {
         loadMore();
       }
     }, 150);
-  }, [hasMore, loading, loadMore]);
+  };
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -42,7 +70,7 @@ function HomePage({}: HomePageProps) {
       }
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleScroll]);
+  }, [hasMore, loading]);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">

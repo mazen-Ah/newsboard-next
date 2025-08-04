@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import { Article } from '@/types';
 
@@ -10,7 +10,7 @@ export const useNews = (query = '') => {
   const [hasMore, setHasMore] = useState(true);
   const loadingRef = useRef(false);
 
-  const fetchNews = useCallback(async () => {
+  const fetchNews = async () => {
     if (loadingRef.current) return;
     
     try {
@@ -35,13 +35,13 @@ export const useNews = (query = '') => {
       setLoading(false);
       loadingRef.current = false;
     }
-  }, [query, page]);
+  };
 
-  const loadMore = useCallback(() => {
+  const loadMore = () => {
     if (!loadingRef.current && !loading && hasMore) {
       setPage(prev => prev + 1);
     }
-  }, [loading, hasMore]);
+  };
 
   useEffect(() => {
     setPage(1);
@@ -55,7 +55,7 @@ export const useNews = (query = '') => {
     if (page > 1) {
       fetchNews();
     }
-  }, [page, fetchNews]);
+  }, [page]);
 
   return { articles, loading, error, hasMore, loadMore };
 };
