@@ -17,7 +17,7 @@ export const useNews = (query = '') => {
       loadingRef.current = true;
       setLoading(true);
       const response = await apiClient.get('/articles', { 
-        params: { query, page, pageSize: 20 } 
+        params: { query, page } 
       });
       const newArticles: Article[] = response?.data?.articles || [];
       

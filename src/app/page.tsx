@@ -24,7 +24,6 @@ export default function Home() {
     scrollTimeout.current = setTimeout(() => {
       const scrollPosition = window.innerHeight + window.scrollY;
       const scrollThreshold = document.documentElement.scrollHeight - 100;
-
       if (scrollPosition >= scrollThreshold && hasMore && !loading) {
         loadMore();
       }
@@ -47,15 +46,13 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-8 text-gray-900">News Articles</h1>
         <SearchBar value={search} onChange={setSearch} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {loading ? (
-            <ArticleSkeleton />
-          ) : (
-            articles?.map((article: Article, i) => (
-              <ArticleCard key={article.id + i} article={article} />
-            ))
-          )}
+          {articles?.map((article: Article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
         </div>
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          {loading ? <ArticleSkeleton /> : null}
+        </div>
         {error ? <ErrorState error={error} /> : null}
         {!loading && !error && articles?.length === 0 ? <EmptyState /> : null}
       </div>
