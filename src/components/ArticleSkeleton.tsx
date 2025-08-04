@@ -1,10 +1,10 @@
 export const ArticleSkeleton = () => {
   return (
-    <div className="flex items-center justify-center flex-wrap gap-6 p-4 w-full">
+    <>
       {Array.from({ length: 10 }).map((_, index) => (
         <div
           key={index}
-          className="bg-white rounded-lg shadow-sm border overflow-hidden animate-pulse"
+          className="bg-white rounded-lg shadow-sm  overflow-hidden animate-pulse"
         >
           <div className="h-48 bg-gray-200" />
           <div className="p-6">
@@ -22,6 +22,6 @@ export const ArticleSkeleton = () => {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 };

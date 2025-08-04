@@ -1,4 +1,4 @@
-import { guardianApiClient, newsApiClient } from "@/lip/apiClient";
+import { guardianApiClient, newsApiClient } from "@/lib/apiClient";
 import { Article } from "@/types";
 import { NextResponse, NextRequest } from "next/server";
 
@@ -9,16 +9,42 @@ export async function GET(request: NextRequest) {
   const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
 
   try {
-    const [newsApiRes, guardianRes] = await Promise.all([
+    const [newsApiResult, guardianResult] = await Promise.allSettled([
       newsApiClient.get("/everything", {
-        params: { q: query, language: "en", page, pageSize },
+        params: { 
+          q: query, 
+          language: "en", 
+          page, 
+          pageSize: Math.ceil(pageSize / 2)
+        },
       }),
       guardianApiClient.get("/search", {
-        params: { q: query, "show-fields": "all", page, pageSize },
-      }),
+        params: { 
+          q: query, 
+          "show-fields": "all", 
+          page, 
+          pageSize: Math.ceil(pageSize / 2)
+        },
+      })
     ]);
 
-    const newsApiArticles = newsApiRes?.data?.articles?.map((article: any) => ({
+    if (
+      newsApiResult.status === "rejected" &&
+      guardianResult.status === "rejected"
+    ) {
+      return NextResponse.json(
+        {
+          error: "All providers failed.",
+          errors: {
+            newsApi: newsApiResult.reason?.response?.data?.message,
+            guardian: guardianResult.reason?.response?.data?.message,
+          },
+        },
+        { status: 502 }
+      );
+    }
+
+    const newsApiArticles = ((newsApiResult.status === "fulfilled" && newsApiResult.value?.data?.articles?.map((article: any) => ({
       id: encodeURIComponent(article.url),
       source: "NewsAPI",
       title: article.title,
@@ -28,9 +54,9 @@ export async function GET(request: NextRequest) {
       url: article.url,
       publishedAt: article.publishedAt,
       author: article.author,
-    })) || [];
+    }))) || []);
 
-    const guardianArticles = guardianRes?.data?.response?.results?.map((article: any) => ({
+    const guardianArticles = ((guardianResult.status === "fulfilled" && guardianResult.value?.data?.response?.results?.map((article: any) => ({
       id: article.id,
       source: "The Guardian",
       title: article.webTitle,
@@ -40,23 +66,23 @@ export async function GET(request: NextRequest) {
       url: article.webUrl,
       publishedAt: article.webPublicationDate,
       author: article.fields?.byline,
-    })) || [];
+    }))) || []);
+
+    const newsApiTotal = newsApiResult.status === "fulfilled" ? newsApiResult.value?.data?.totalResults || 0 : 0;
+    const guardianTotal = guardianResult.status === "fulfilled" ? guardianResult.value?.data?.response?.total || 0 : 0;
+    const total = newsApiTotal + guardianTotal;
 
     const articles: Article[] = [...newsApiArticles, ...guardianArticles];
-
     articles.sort(
       (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
-
-    const totalNewsApi = newsApiRes?.data?.totalResults || 0;
-    const totalGuardian = guardianRes?.data?.response?.total || 0;
-    const total = totalNewsApi + totalGuardian;
 
     return NextResponse.json({
       articles,
       total,
       page,
       pageSize,
+      hasMore: articles.length === pageSize && (page * pageSize) < total
     });
   } catch (error: any) {
     console.error("API /api/articles error:", {
