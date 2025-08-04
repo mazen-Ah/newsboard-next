@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
+
 export async function generateMetadata(
   { params }: { params: { id: string } },
   parent: ResolvingMetadata
@@ -25,9 +26,9 @@ export async function generateMetadata(
     description: article.description,
   };
 }
+
 export default async function ArticlePage({ params }: Props) {
-  const { id } = await params;
-  const article = (await getArticle(id)) as Article;
+  const article = (await getArticle(params.id)) as Article;
 
   return (
     <main className="min-h-screen bg-gray-50">
