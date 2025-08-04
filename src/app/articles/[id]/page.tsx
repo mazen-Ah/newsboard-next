@@ -3,13 +3,15 @@ import { Article } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { JSX } from "react";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const article = (await getArticle(params.id)) as Article;
+  const { id } = await params;
+  const article = (await getArticle(id)) as Article;
 
   if (!article) {
     return {
@@ -24,13 +26,17 @@ export async function generateMetadata({
   };
 }
 
-type PageProps = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default async function ArticlePage({ params }: PageProps) {
-  const article = (await getArticle(params.id)) as Article;
+export default async function ArticlePage({
+  params,
+  searchParams,
+}: PageProps): Promise<JSX.Element> {
+  const { id } = await params;
+  const article = (await getArticle(id)) as any;
 
   return (
     <main className="min-h-screen bg-gray-50">
