@@ -1,12 +1,10 @@
 import { guardianApiClient, newsApiClient } from "./apiClient";
 import { Article } from "@/types";
 
-
-
 export const transformNews = (article: any, type: string): Article => {
   if (type === "guardian") {
     return {
-      id: `guardian-${article.id}`, 
+      id: article.webUrl, 
       source: "The Guardian",
       title: article.webTitle || "",
       description: article.fields?.trailText || "",
@@ -19,7 +17,7 @@ export const transformNews = (article: any, type: string): Article => {
   }
   
   return {
-    id: article.url, 
+    id: article.title.replaceAll(':', ''), 
     source: "NewsAPI",
     title: article.title || "",
     description: article.description || "",
@@ -126,7 +124,10 @@ if(query === "latest") { allArticles.sort((a, b) =>
   };
 };
 
-
-
+export const getArticle = (async (id: string) => {
+  const decodedId = decodeURIComponent(id);
+  const { articles } = await getAllArticles(id, 1, 10);
+  return articles.find((a) => a.title === decodedId) as Article;
+});
 
 
