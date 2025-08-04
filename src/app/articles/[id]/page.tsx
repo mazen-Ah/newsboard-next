@@ -1,17 +1,14 @@
 import { getAllArticles, getArticle } from "@/lib/newsService";
 import { Article } from "@/types";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-type Props = {
+export async function generateMetadata({
+  params,
+}: {
   params: { id: string };
-};
-
-export async function generateMetadata(
-  { params }: { params: { id: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+}): Promise<Metadata> {
   const article = (await getArticle(params.id)) as Article;
 
   if (!article) {
@@ -27,7 +24,12 @@ export async function generateMetadata(
   };
 }
 
-export default async function ArticlePage({ params }: Props) {
+type PageProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function ArticlePage({ params }: PageProps) {
   const article = (await getArticle(params.id)) as Article;
 
   return (
