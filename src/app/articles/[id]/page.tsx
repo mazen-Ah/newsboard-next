@@ -11,7 +11,7 @@ export async function generateMetadata(
   { params }: { params: { id: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const article = await getArticle(params.id);
+  const article = (await getArticle(params.id)) as Article;
 
   if (!article) {
     return {
