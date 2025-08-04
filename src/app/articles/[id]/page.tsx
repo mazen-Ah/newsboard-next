@@ -37,7 +37,7 @@ export default async function ArticlePage({
   searchParams,
 }: PageProps): Promise<JSX.Element> {
   const { id } = await params;
-  const article = (await getArticle(id)) as any;
+  const article = (await getArticle(id)) as Article;
   if (!article) {
     return notFound();
   }
