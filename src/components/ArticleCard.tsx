@@ -8,19 +8,9 @@ type Props = {
 };
 
 const ArticleCard: React.FC<Props> = ({ article }) => {
-  // Create a URL-safe version of the title for better SEO and search
-  const titleSlug = encodeURIComponent(
-    article.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-  );
-
   return (
     <Link
-      href={`/articles/${article.id}?title=${encodeURIComponent(
-        article.title
-      )}`}
+      href={`/articles/${encodeURIComponent(article.id)}`}
       className="group"
     >
       <article className="bg-white rounded-xl shadow-sm hover:shadow-lg overflow-hidden h-full flex flex-col transition-all duration-300 group-hover:scale-[1.02]">

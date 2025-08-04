@@ -124,10 +124,35 @@ if(query === "latest") { allArticles.sort((a, b) =>
   };
 };
 
-export const getArticle = (async (id: string) => {
-  const decodedId = decodeURIComponent(id);
-  const { articles } = await getAllArticles(id, 1, 10);
-  return articles.find((a) => a.title === decodedId) as Article;
-});
+export const getArticle = async (id: string) => {
+  const [articleId] = id.split('?');
+  const decodedId = decodeURIComponent(articleId);
+  if (decodedId.includes('theguardian.com')) {
+    try {
+      const urlPath = decodedId.split('theguardian.com/')[1];
+      const response = await guardianApiClient.get(`/${urlPath}`, {
+        params: {
+          'show-fields': 'all'
+        }
+      });
+      const article = response.data?.response?.content;
+      return article ? transformNews(article, 'guardian') : null;
+    } catch (error) {
+      console.error('Error fetching Guardian article:', error);
+      return error;
+    }
+  }
+  const title = decodedId;
+  try {
+    const { articles } = await getAllArticles(title, 1, 10);
+    return articles.find(article => 
+      article.source === 'NewsAPI' && 
+      article.title.replaceAll(':', '') === title
+    );
+  } catch (error) {
+    console.error('Error fetching NewsAPI article:', error);
+    return error;
+  }
+};
 
 

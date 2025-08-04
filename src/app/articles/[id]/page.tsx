@@ -23,25 +23,11 @@ export async function generateMetadata(
   return {
     title: article.title,
     description: article.description,
-    openGraph: {
-      title: article.title,
-      description: article.description,
-      images: article.image ? [article.image] : [],
-      type: "article",
-      authors: article.author ? [article.author] : [],
-      publishedTime: article.publishedAt,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: article.title,
-      description: article.description,
-      images: article.image ? [article.image] : [],
-    },
   };
 }
 export default async function ArticlePage({ params }: Props) {
   const { id } = await params;
-  const article = await getArticle(id);
+  const article = (await getArticle(id)) as Article;
 
   return (
     <main className="min-h-screen bg-gray-50">
