@@ -1,78 +1,69 @@
-# NewsFlow
 
-NewsFlow is a modern news aggregator built with Next.js that combines articles from NewsAPI and The Guardian API. It features infinite scrolling, real-time search, and a responsive design.
+## Key Components
 
-## Features
+### HomePage
+The main component that handles:
+- Article display with infinite scroll
+- Search functionality with debouncing
+- GSAP animations for smooth transitions
+- Dynamic grid layout based on available space
 
-- 🔄 Real-time article search
-- ♾️ Infinite scroll pagination
-- 📱 Responsive design
-- 🖼️ Image optimization with Next.js Image
-- ⚡ Fast page loads with server-side rendering
-- 🎨 Modern UI with Tailwind CSS
+### useNews Hook
+Custom hook that manages:
+- Article fetching from multiple APIs
+- Pagination and infinite scroll logic
+- Loading and error states
+- Search query handling
 
-## Prerequisites
+### ArticleCard
+Displays article previews with:
+- Responsive image handling
+- Truncated descriptions
+- Publication date formatting
+- Click navigation to full article
 
-Before you begin, you'll need:
+## Technologies Used
 
-- Node.js 18.x or later
-- API keys from:
-  - [NewsAPI](https://newsapi.org)
-  - [The Guardian API](https://open-platform.theguardian.com)
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety and better development experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **GSAP** - Animation library for smooth transitions
+- **Axios** - HTTP client for API requests
+- **React Hooks** - State management and side effects
 
-## Getting Started
-
-1. Clone the repository
-
-```bash
-git clone <your-repo-url>
-cd newsboard-next
-```
-
-2. Install dependencies
-
-```bash
-npm install
-```
-
-3. Set up environment variables
-
-Create a `.env.local` file in the root directory with the following variables:
-
-```env
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXT_PUBLIC_NEWSAPI_KEY=your_newsapi_key_here
-NEXT_PUBLIC_GUARDIAN_API_KEY=your_guardian_api_key_here
-```
-
-4. Run the development server
+## Scripts
 
 ```bash
-npm run dev
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript compiler check
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Performance Optimizations
 
-## Environment Variables
+- **Image Optimization**: Next.js Image component with lazy loading
+- **Infinite Scroll**: Load articles on demand to reduce initial bundle size
+- **Debounced Search**: Prevent excessive API calls during typing
+- **Server-Side Rendering**: Fast initial page loads
+- **Dynamic Grid**: Responsive layout that adapts to screen size
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NEXT_PUBLIC_NEWSAPI_KEY` | 407126cc0152479cb6a3c875f402f789
-| `NEXT_PUBLIC_GUARDIAN_API_KEY` | 407126cc0152479cb6a3c875f402f789
+## Contributing
 
-## API Integration
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### NewsAPI
-- Base URL: https://newsapi.org/v2
-- Authentication: API key in headers (`X-API-Key`)
-- Endpoints used:
-  - `/everything`: Search articles with parameters
+## License
 
-### The Guardian API
-- Base URL: https://content.guardianapis.com
-- Authentication: API key in query parameters (`api-key`)
-- Endpoints used:
-  - `/search`: Search articles
-  - `/{article-path}`: Get single article
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Project Structure
+## Acknowledgments
+
+- [NewsAPI](https://newsapi.org) for providing news data
+- [The Guardian](https://open-platform.theguardian.com) for their open API
+- [Next.js](https://nextjs.org) team for the amazing framework
+- [Tailwind CSS](https://tailwindcss.com) for the utility-first CSS framework

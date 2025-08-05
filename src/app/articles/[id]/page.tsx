@@ -45,7 +45,7 @@ export default async function ArticlePage({
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
           href="/"
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 transition-colors"
+          className="inline-flex items-center text-blue-500 hover:text-blue-800 mb-6 transition-colors"
         >
           <svg
             className="w-4 h-4 mr-2"
@@ -103,7 +103,7 @@ export default async function ArticlePage({
               <Link
                 href={article?.url}
                 target="_blank"
-                className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Read Original Article
                 <svg
