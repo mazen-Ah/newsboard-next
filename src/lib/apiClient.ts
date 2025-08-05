@@ -7,7 +7,7 @@ export const apiClient = axios.create({
 export const newsApiClient = axios.create({
   baseURL: "https://newsapi.org/v2",
   headers: {
-    "X-API-Key": process.env.NEXT_PUBLIC_NEWSAPI_KEY  || "407126cc0152479cb6a3c875f402f789",
+    "X-API-Key": process.env.NEXT_PUBLIC_NEWSAPI_KEY  || "febba8a7f5894fd5873a85d116fb6dfe",
   },
 });
 
