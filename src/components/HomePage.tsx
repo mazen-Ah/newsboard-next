@@ -16,39 +16,12 @@ interface HomePageProps {
 }
 
 function HomePage({}: HomePageProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [search, setSearch] = useState(() => {
-    return searchParams.get("q") || "latest";
-  });
-
+  const [search, setSearch] = useState("latest");
   const debouncedSearch = useDebounce(search);
   const { articles, loading, error, hasMore, loadMore } =
     useNews(debouncedSearch);
+
   const scrollTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
-
-  // Update search state when URL parameters change (e.g., when navigating back)
-  useEffect(() => {
-    const urlQuery = searchParams.get("q") || "latest";
-    if (urlQuery !== search) {
-      setSearch(urlQuery);
-    }
-  }, [searchParams]);
-
-  // Update URL when search changes (but only if it's different from URL)
-  useEffect(() => {
-    const currentUrlQuery = searchParams.get("q") || "latest";
-    if (debouncedSearch !== currentUrlQuery) {
-      const params = new URLSearchParams(searchParams);
-      if (debouncedSearch && debouncedSearch !== "latest") {
-        params.set("q", debouncedSearch);
-      } else {
-        params.delete("q");
-      }
-      router.replace(`?${params.toString()}`, { scroll: false });
-    }
-  }, [debouncedSearch, router, searchParams]);
-
   const handleScroll = () => {
     if (scrollTimeout.current) {
       clearTimeout(scrollTimeout.current);
@@ -61,7 +34,6 @@ function HomePage({}: HomePageProps) {
       }
     }, 150);
   };
-
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
