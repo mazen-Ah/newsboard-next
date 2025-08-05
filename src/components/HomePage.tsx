@@ -91,7 +91,7 @@ function HomePage({}: HomePageProps) {
       </div>
 
       {error && <ErrorState error={error} />}
-      {!loading || !error || articles?.length === 0 || <EmptyState />}
+      {!loading && !error && articles?.length === 0 && <EmptyState />}
     </div>
   );
 }
