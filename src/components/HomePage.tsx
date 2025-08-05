@@ -10,13 +10,14 @@ import { Article } from "@/types";
 import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import ArticleCard from "@/components/ArticleCard";
+import { useParamsSearch } from "@/hooks/useParamsSearch";
 
 interface HomePageProps {
   initialArticles?: Article[];
 }
 
 function HomePage({}: HomePageProps) {
-  const [search, setSearch] = useState("latest");
+  const [search, setSearch] = useParamsSearch("latest");
   const debouncedSearch = useDebounce(search);
   const { articles, loading, error, hasMore, loadMore } =
     useNews(debouncedSearch);
