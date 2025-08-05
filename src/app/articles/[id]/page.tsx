@@ -94,7 +94,10 @@ export default async function ArticlePage({
             <p className="text-xl text-gray-700 mb-6 leading-relaxed">
               {article?.description}
             </p>
-            <div className="prose prose-lg max-w-none">{article?.content}</div>
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: article?.content || "" }}
+            />
 
             <div className="mt-8 pt-6 border-t border-gray-200">
               <Link

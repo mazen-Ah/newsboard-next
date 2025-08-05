@@ -22,7 +22,7 @@ export const useNews = (query = '') => {
       
       const newArticles: Article[] = response?.data?.articles || [];
       
-      setArticles(prev => page === 1 ? newArticles : [...prev, ...newArticles]);
+      setArticles(prev => [...prev, ...newArticles]);
       setHasMore(response.data.hasMore);
       setError(null);
     } catch (err: any) {

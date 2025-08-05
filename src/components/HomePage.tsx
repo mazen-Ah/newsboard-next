@@ -74,23 +74,6 @@ function HomePage({}: HomePageProps) {
     }
   }, []);
 
-  useEffect(() => {
-    if (articlesRef.current) {
-      gsap.fromTo(
-        articlesRef.current.children,
-        { opacity: 0, y: 50, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          stagger: 0.08,
-          duration: 0.5,
-          ease: "power2.out",
-        }
-      );
-    }
-  }, [articles]);
-
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <h1 ref={titleRef} className="text-4xl font-bold mb-8 text-gray-900">
@@ -104,14 +87,11 @@ function HomePage({}: HomePageProps) {
         {articles?.map((article: Article) => (
           <ArticleCard key={article.id} article={article} />
         ))}
+        {loading && <ArticleSkeleton />}
       </div>
-      {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          <ArticleSkeleton />
-        </div>
-      )}
+
       {error && <ErrorState error={error} />}
-      {!loading && !error && articles?.length === 0 && <EmptyState />}
+      {!loading || !error || articles?.length === 0 || <EmptyState />}
     </div>
   );
 }
