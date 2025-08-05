@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useNews } from "@/hooks/useNews";
 import SearchBar from "@/components/SearchBar";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -10,15 +9,17 @@ import { Article } from "@/types";
 import ErrorState from "@/components/ErrorState";
 import EmptyState from "@/components/EmptyState";
 import ArticleCard from "@/components/ArticleCard";
-import { useParamsSearch } from "@/hooks/useParamsSearch";
 import gsap from "gsap";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface HomePageProps {
   initialArticles?: Article[];
 }
 
 function HomePage({}: HomePageProps) {
-  const [search, setSearch] = useParamsSearch("latest");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") || "latest");
   const debouncedSearch = useDebounce(search);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const searchBarRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,7 @@ function HomePage({}: HomePageProps) {
       }
     }, 150);
   };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -49,6 +51,12 @@ function HomePage({}: HomePageProps) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [hasMore, loading]);
+
+  useEffect(() => {
+    const url = search === "latest" ? "/" : `/?q=${search}`;
+    router.replace(url);
+  }, [search]);
+
   useEffect(() => {
     if (titleRef.current) {
       gsap.fromTo(
