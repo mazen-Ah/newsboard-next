@@ -76,8 +76,11 @@ function HomePage({}: HomePageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 ref={titleRef} className="text-4xl font-bold mb-8 text-gray-900">
-        <span className="text-blue-600">Your Daily News</span>
+      <h2
+        ref={titleRef}
+        className="text-4xl font-bold text-center mb-8 text-gray-900"
+      >
+        <span className="text-blue-500">Latest News</span>
       </h2>
       <SearchBar ref={searchBarRef} value={search} onChange={setSearch} />
       <div

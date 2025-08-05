@@ -26,7 +26,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
           />
         </div>
         <div className="p-5 flex flex-col h-full">
-          <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+          <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-500 transition-colors duration-200 line-clamp-2">
             {article?.title}
           </h2>
           <p className="text-gray-600 text-sm mb-4 flex-grow line-clamp-3">
@@ -50,7 +50,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
               {new Date(article.publishedAt).toLocaleDateString()}
             </span>
           </div>
-          <div className="mt-3 text-blue-600 text-sm font-medium group-hover:text-blue-700 transition-colors">
+          <div className="mt-3 text-blue-500 text-sm font-medium group-hover:text-blue-700 transition-colors">
             Read more →
           </div>
         </div>
